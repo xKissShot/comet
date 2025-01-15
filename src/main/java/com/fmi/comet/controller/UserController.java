@@ -23,7 +23,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<User> loginUser(@RequestBody User user) {
-        Optional<User> loggedInUser = userService.findByID(user.getID());
+        Optional<User> loggedInUser = userService.findByID(user.getId());
         if (loggedInUser.isPresent()) {
             return ResponseEntity.ok(loggedInUser.get());
         }
