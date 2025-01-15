@@ -1,4 +1,4 @@
-package com.fmi.comet.repository;
+package com.fmi.comet.db;
 import com.fmi.comet.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
