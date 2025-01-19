@@ -1,33 +1,39 @@
 package com.fmi.comet.controller;
 
-import com.fmi.comet.model.User;
 import com.fmi.comet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        userService.registerUser(user);
-        return ResponseEntity.ok(user);
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody User user) {
-        Optional<User> loggedInUser = userService.findByID(user.getId());
-        if (loggedInUser.isPresent()) {
-            return ResponseEntity.ok(loggedInUser.get());
-        }
-        return ResponseEntity.status(401).body(null); // Unauthorized
+    @GetMapping
+    public List<Map<String, Object>> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addUser(@RequestBody Map<String, Object> user) {
+        userService.addUser(user);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void softDeleteUser(@PathVariable Long id) {
+        userService.softDeleteUser(id);
     }
 }
 
