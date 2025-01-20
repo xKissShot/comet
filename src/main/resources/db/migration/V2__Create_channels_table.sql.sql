@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS channels (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    owner_id BIGINT NOT NULL,
-    is_deleted BOOLEAN DEFAULT FALSE
-);
