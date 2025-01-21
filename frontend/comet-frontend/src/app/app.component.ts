@@ -1,37 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common'; // For *ngIf
+import { FormsModule } from '@angular/forms';   // For ngModel
 
 @Component({
   selector: 'app-root',
+  standalone: true, // Ensure this is set if using standalone components
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  imports: [CommonModule, FormsModule], // Add required modules here
 })
-export class AppComponent implements OnInit {
-  registrationForm: FormGroup;
-
-  constructor(private fb: FormBuilder) {
-    // Initialize the form using FormBuilder
-    this.registrationForm = this.fb.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
-    });
-  }
-
-  ngOnInit(): void {}
+export class AppComponent {
+  username: string = '';
+  password: string = '';
+  confirmPassword: string = '';
+  touched: boolean = false;
 
   onSubmit() {
-    if (this.registrationForm.valid) {
-      const { username, password, confirmPassword } = this.registrationForm.value;
-
-      if (password !== confirmPassword) {
-        console.error('Passwords do not match');
-        return;
-      }
-
-      console.log('Form Submitted:', { username, password });
-    } else {
-      console.error('Form is invalid');
-    }
+    alert('Form submitted successfully!');
   }
 }
