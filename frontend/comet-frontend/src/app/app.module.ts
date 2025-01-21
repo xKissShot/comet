@@ -1,21 +1,24 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';  // Import RouterModule
-import { RegisterComponent } from './register/register.component';  // Import the RegisterComponent
+import { FormsModule } from '@angular/forms';    // Import FormsModule
+import { AppComponent } from './app.component';
+import { RegisterComponent } from './register/register.component';  // Import RegisterComponent
 
 @NgModule({
   declarations: [
     AppComponent,
-    RegisterComponent  // Declare RegisterComponent here
+    RegisterComponent  // Declare RegisterComponent
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot([  // Configure your routes here
-      { path: 'register', component: RegisterComponent }
+    FormsModule,        // Add FormsModule
+    RouterModule.forRoot([   // Make sure the RouterModule is set up properly
+      { path: 'register', component: RegisterComponent },  // Register route for register
+      { path: '', redirectTo: '/login', pathMatch: 'full' }  // Optional: Default route
     ])
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent]  // Bootstrapping AppComponent
 })
 export class AppModule { }
