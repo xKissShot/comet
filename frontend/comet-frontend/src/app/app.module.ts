@@ -1,17 +1,13 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';  // This imports CommonModule automatically
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';  // Import HttpClientModule
 
 @NgModule({
   declarations: [
     AppComponent
-    // other components
   ],
   imports: [
-    BrowserModule,
-    HttpClientModule  // Add HttpClientModule here
-    // other modules
+    BrowserModule  // No need for CommonModule here, as BrowserModule includes it.
   ],
   providers: [],
   bootstrap: [AppComponent]
