@@ -1,27 +1,22 @@
-<div>
-  <label>Username:</label>
-  <input [(ngModel)]="username" (blur)="touched = true" />
-  <div *ngIf="!username && touched" style="color: red;">
-    Username is required.
+<!-- app.component.html -->
+<div class="container">
+  <div class="login-box">
+    <h2>Login</h2>
+    <form action="#">
+      <div class="textbox">
+        <input type="text" placeholder="Username" name="username" required [(ngModel)]="username" />
+      </div>
+      <div class="textbox">
+        <input type="password" placeholder="Password" name="password" required [(ngModel)]="password" />
+      </div>
+      <div class="button-container">
+        <input type="submit" value="Login">
+        <!-- This is the Register link that routes to /register -->
+        <a routerLink="/register" class="register-btn">Register</a>
+      </div>
+    </form>
   </div>
 </div>
 
-<div>
-  <label>Password:</label>
-  <input [(ngModel)]="password" type="password" (blur)="touched = true" />
-  <div *ngIf="password.length < 6 && touched" style="color: red;">
-    Password must be at least 6 characters.
-  </div>
-</div>
-
-<div>
-  <label>Confirm Password:</label>
-  <input [(ngModel)]="confirmPassword" type="password" (blur)="touched = true" />
-  <div *ngIf="confirmPassword !== password && touched" style="color: red;">
-    Passwords do not match.
-  </div>
-</div>
-
-<button [disabled]="!username || password.length < 6 || confirmPassword !== password">
-  Submit
-</button>
+<!-- The router-outlet is where the routed components will be rendered -->
+<router-outlet></router-outlet>

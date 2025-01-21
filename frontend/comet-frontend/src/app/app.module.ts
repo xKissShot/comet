@@ -1,18 +1,21 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms'; // For ngModel
-import { CommonModule } from '@angular/common'; // For *ngIf
-
 import { AppComponent } from './app.component';
+import { RouterModule } from '@angular/router';  // Import RouterModule
+import { RegisterComponent } from './register/register.component';  // Import the RegisterComponent
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    RegisterComponent  // Declare RegisterComponent here
+  ],
   imports: [
     BrowserModule,
-    FormsModule,   // Ensure FormsModule is imported
-    CommonModule,  // Ensure CommonModule is imported
+    RouterModule.forRoot([  // Configure your routes here
+      { path: 'register', component: RegisterComponent }
+    ])
   ],
   providers: [],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

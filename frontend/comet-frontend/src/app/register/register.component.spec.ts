@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RegisterComponent } from './register.component';
+import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -8,7 +8,8 @@ describe('RegisterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RegisterComponent]
+      declarations: [ RegisterComponent ],  // Declare the RegisterComponent here
+      imports: [ FormsModule ]  // Import FormsModule to support ngModel in the template
     })
     .compileComponents();
 
@@ -20,4 +21,6 @@ describe('RegisterComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // You can also add more tests for user interaction, form validation, etc.
 });
