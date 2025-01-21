@@ -1,7 +1,10 @@
 CREATE TABLE users (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
-    name NVARCHAR(255) NOT NULL,
-    is_deleted BIT DEFAULT 0
+    username NVARCHAR(255) NOT NULL,
+    password NVARCHAR(255) NOT NULL,
+    role NVARCHAR(50) NOT NULL,
+    is_deleted BIT DEFAULT 0,
+    deleted_at DATETIME NULL
 );
 
 CREATE TABLE channels (
@@ -19,4 +22,12 @@ CREATE TABLE messages (
     content NVARCHAR(MAX) NOT NULL,
     FOREIGN KEY (sender_id) REFERENCES users(id),
     FOREIGN KEY (channel_id) REFERENCES channels(id)
+);
+
+CREATE TABLE user_friends (
+    user_id BIGINT NOT NULL,
+    friend_id BIGINT NOT NULL,
+    PRIMARY KEY (user_id, friend_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (friend_id) REFERENCES users(id)
 );
