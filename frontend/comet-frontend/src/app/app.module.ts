@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';  // This imports CommonModule automatically
+import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms'; // Import this for reactive forms
+
 import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent, // Declare the AppComponent
   ],
   imports: [
-    BrowserModule  // No need for CommonModule here, as BrowserModule includes it.
+    BrowserModule,        // Basic Angular functionalities
+    ReactiveFormsModule,  // Add ReactiveFormsModule here
   ],
   providers: [],
   bootstrap: [AppComponent]

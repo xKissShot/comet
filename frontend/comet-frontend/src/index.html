@@ -7,18 +7,124 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Include styles first -->
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Body - Set background color and center content */
+    body {
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-  <!-- Include other stylesheets if any -->
-  <!-- <link rel="stylesheet" href="other-styles.css"> -->
+    /* Container - Flexbox for centering the login box */
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    /* Login Box Style */
+    .login-box {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+    }
+
+    /* Login Form */
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    /* Textboxes (input fields) */
+    .textbox {
+      margin-bottom: 20px;
+    }
+
+    .textbox input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .textbox input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    /* Submit button */
+    input[type="submit"] {
+      width: 48%;
+      padding: 10px;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 4%;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    /* Register button */
+    .register-btn {
+      width: 48%;
+      padding: 10px;
+      background-color: #28a745;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .register-btn:hover {
+      background-color: #218838;
+    }
+
+    /* Clear the floats after buttons */
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-<!-- Your Angular app root -->
-<app-root></app-root>
-
-<!-- Defer loading of JavaScript (if managing manually) -->
-<!-- <script src="main.js" defer></script> -->
+<div class="container">
+  <div class="login-box">
+    <h2>Login</h2>
+    <form action="#">
+      <div class="textbox">
+        <input type="text" placeholder="Username" name="username" required>
+      </div>
+      <div class="textbox">
+        <input type="password" placeholder="Password" name="password" required>
+      </div>
+      <div class="button-container">
+        <input type="submit" value="Login">
+        <!-- The following button will redirect to the Register page -->
+        <button routerLink="/register" class="register-btn">Register</button>
+      </div>
+    </form>
+  </div>
+</div>
 </body>
 </html>

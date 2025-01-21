@@ -3,6 +3,7 @@ package com.fmi.comet.service;
 import com.fmi.comet.model.User;
 import com.fmi.comet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,10 +12,13 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;  // Declare PasswordEncoder
 
+    // Inject UserRepository and PasswordEncoder through constructor
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;  // UserRepository is injected here
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;  // Initialize PasswordEncoder
     }
 
     // Get all users
@@ -24,8 +28,14 @@ public class UserService {
 
     // Add a new user
     public User addUser(User user) {
-        userRepository.insertUser(user);
-        return userRepository.findUserById(user.getId());  // Return the user after inserting
+        // Hash the password before inserting
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // Insert the user into the database
+        userRepository.insertUser(user);  // Use insertUser() instead of save()
+
+        // Return the user with the updated ID (after insert)
+        return userRepository.findUserById(user.getId());
     }
 
     // Soft delete a user
@@ -52,5 +62,17 @@ public class UserService {
     // Get all friends for a user
     public List<User> getFriends(Integer userId) {
         return userRepository.findFriends(userId);
+    }
+
+    // Register a new user (with password encoding)
+    public User registerUser(User user) {
+        // Hash the password before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // Insert the new user into the database
+        userRepository.insertUser(user);  // Use insertUser() instead of save()
+
+        // Return the user with the updated ID (after insert)
+        return userRepository.findUserById(user.getId());
     }
 }

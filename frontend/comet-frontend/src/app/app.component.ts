@@ -1,7 +1,5 @@
-// app.component.ts
 import { Component, OnInit } from '@angular/core';
-import { UserService } from './user.service';
-import { User } from './user.model';  // Ensure the User model exists
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -9,23 +7,31 @@ import { User } from './user.model';  // Ensure the User model exists
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  users: User[] = [];
-  loading = false;
-  error: string = '';
+  registrationForm: FormGroup;
 
-  constructor(private userService: UserService) {}
+  constructor(private fb: FormBuilder) {
+    // Initialize the form using FormBuilder
+    this.registrationForm = this.fb.group({
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]]
+    });
+  }
 
-  ngOnInit(): void {
-    this.loading = true;
-    this.userService.getUsers().subscribe(
-      (data: User[]) => {
-        this.users = data;
-        this.loading = false;
-      },
-      (err) => {
-        this.error = 'Failed to load users';
-        this.loading = false;
+  ngOnInit(): void {}
+
+  onSubmit() {
+    if (this.registrationForm.valid) {
+      const { username, password, confirmPassword } = this.registrationForm.value;
+
+      if (password !== confirmPassword) {
+        console.error('Passwords do not match');
+        return;
       }
-    );
+
+      console.log('Form Submitted:', { username, password });
+    } else {
+      console.error('Form is invalid');
+    }
   }
 }

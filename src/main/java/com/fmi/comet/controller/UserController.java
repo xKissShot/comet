@@ -70,4 +70,21 @@ public class UserController {
         User updatedUser = userService.updateRole(id, newRole);
         return ResponseEntity.ok(updatedUser);
     }
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
+        try {
+            // Validate the user details (you can add more checks here)
+            if (user.getUsername() == null || user.getPassword() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Username and password must be provided.");
+            }
+
+            // Call the service to save the user (you might need to hash the password in the service)
+            User createdUser = userService.registerUser(user);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
 }
