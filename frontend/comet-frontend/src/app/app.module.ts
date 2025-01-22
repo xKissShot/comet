@@ -1,24 +1,28 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';  // Import RouterModule
-import { FormsModule } from '@angular/forms';    // Import FormsModule
+import { RouterModule } from '@angular/router'; // Import RouterModule
+import { FormsModule } from '@angular/forms';   // Import FormsModule for ngModel
 import { AppComponent } from './app.component';
-import { RegisterComponent } from './register/register.component';  // Import RegisterComponent
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RegisterComponent  // Declare RegisterComponent
+    RegisterComponent,
+    LoginComponent // Declare LoginComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,        // Add FormsModule
-    RouterModule.forRoot([   // Make sure the RouterModule is set up properly
-      { path: 'register', component: RegisterComponent },  // Register route for register
-      { path: '', redirectTo: '/login', pathMatch: 'full' }  // Optional: Default route
+    FormsModule,
+    RouterModule.forRoot([
+      { path: 'register', component: RegisterComponent }, // Route for RegisterComponent
+      { path: 'login', component: LoginComponent },       // Route for LoginComponent
+      { path: '', redirectTo: '/login', pathMatch: 'full' } // Default route
     ])
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add CUSTOM_ELEMENTS_SCHEMA
   providers: [],
-  bootstrap: [AppComponent]  // Bootstrapping AppComponent
+  bootstrap: [AppComponent] // Bootstrap the root component
 })
 export class AppModule { }
