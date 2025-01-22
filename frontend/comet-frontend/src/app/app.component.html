@@ -1,14 +1,15 @@
 <div class="container">
-  <!-- Optional: A header or navigation bar -->
+  <!-- Welcome message -->
   <header>
-    <h1>Welcome to the Application!</h1>
-    <!-- Example navigation (optional) -->
-    <nav>
-      <a routerLink="/login" routerLinkActive="active">Login</a> |
-      <a routerLink="/register" routerLinkActive="active">Register</a>
-    </nav>
+    <h1>Welcome to Comet!</h1>
   </header>
 
-    <router-outlet></router-outlet>
+  <!-- Centered window with buttons -->
+  <div class="centered-window">
+    <button routerLink="/login" class="button">Go to Login</button>
+    <button routerLink="/register" class="button">Go to Register</button>
   </div>
 
+  <!-- Router outlet where LoginComponent and RegisterComponent will be rendered -->
+  <router-outlet></router-outlet>
+</div>
