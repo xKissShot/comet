@@ -1,28 +1,14 @@
 <div class="container">
-  <h2>Login</h2>
-  <form (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input
-        type="text"
-        id="username"
-        [(ngModel)]="username"
-        name="username"
-        class="form-control"
-        required />
-    </div>
+  <header>
+    <h1>Welcome to Comet!</h1>
+  </header>
 
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input
-        type="password"
-        id="password"
-        [(ngModel)]="password"
-        name="password"
-        class="form-control"
-        required />
-    </div>
+  <div class="centered-window">
+    <!-- These buttons navigate to the login and register pages -->
+    <button routerLink="/login" class="button">Go to Login</button>
+    <button routerLink="/register" class="button">Go to Register</button>
+  </div>
 
-    <button type="submit" class="btn btn-primary">Login</button>
-  </form>
+  <!-- This is where the routed components (LoginComponent and RegisterComponent) will be rendered -->
+  <router-outlet></router-outlet>
 </div>
