@@ -1,3 +1,6 @@
+-- db/migration/V1__Create_tables.sql
+
+-- Create users table
 CREATE TABLE users (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     username NVARCHAR(255) NOT NULL,
@@ -7,6 +10,7 @@ CREATE TABLE users (
     deleted_at DATETIME NULL
 );
 
+-- Create channels table
 CREATE TABLE channels (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     name NVARCHAR(255) NOT NULL,
@@ -15,6 +19,7 @@ CREATE TABLE channels (
     FOREIGN KEY (owner_id) REFERENCES users(id)
 );
 
+-- Create messages table
 CREATE TABLE messages (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     sender_id BIGINT NOT NULL,
@@ -25,6 +30,7 @@ CREATE TABLE messages (
     FOREIGN KEY (channel_id) REFERENCES channels(id)
 );
 
+-- Create user_friends table
 CREATE TABLE user_friends (
     user_id BIGINT NOT NULL,
     friend_id BIGINT NOT NULL,
