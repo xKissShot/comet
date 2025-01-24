@@ -37,4 +37,11 @@ public class MessageController {
         List<Message> messages = messageService.getMessagesByChannelId(channelId);
         return ResponseEntity.ok(messages);
     }
+
+    // Get all messages for a user
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Message>> getMessagesByUserId(@PathVariable Long userId) {
+        List<Message> messages = messageService.getMessagesByUserId(userId);
+        return ResponseEntity.ok(messages);
+    }
 }

@@ -30,4 +30,9 @@ public class MessageService {
     public List<Message> getMessagesByChannelId(Long channelId) {
         return messageRepository.findByChannelId(channelId);
     }
+
+    // Add a method to retrieve messages for a specific user
+    public List<Message> getMessagesByUserId(Long userId) {
+        return messageRepository.findByUserId(userId); // Call the repository method to fetch messages by sender_id
+    }
 }
