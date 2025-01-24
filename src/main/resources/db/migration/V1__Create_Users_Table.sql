@@ -20,6 +20,7 @@ CREATE TABLE messages (
     sender_id BIGINT NOT NULL,
     channel_id BIGINT NOT NULL,
     content NVARCHAR(MAX) NOT NULL,
+    timestamp DATETIME NOT NULL, -- Add this column to store message creation time
     FOREIGN KEY (sender_id) REFERENCES users(id),
     FOREIGN KEY (channel_id) REFERENCES channels(id)
 );
