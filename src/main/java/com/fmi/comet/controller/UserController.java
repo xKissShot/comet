@@ -36,40 +36,42 @@ public class UserController {
 
     // Soft delete a user
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDeleteUser(@PathVariable Integer id) {
-        userService.softDeleteUser(id);
+    public ResponseEntity<Void> softDeleteUser(@PathVariable Long id) {  // Changed to Long
+        userService.softDeleteUser(id);  // Changed to Long
         return ResponseEntity.noContent().build();
     }
 
     // Get all friends of a user
     @GetMapping("/{id}/friends")
-    public ResponseEntity<List<User>> getFriends(@PathVariable Integer id) {
-        List<User> friends = userService.getFriends(id);
+    public ResponseEntity<List<User>> getFriends(@PathVariable Long id) {  // Changed to Long
+        List<User> friends = userService.getFriends(id);  // Changed to Long
         return ResponseEntity.ok(friends);
     }
 
     // Add a friend to a user
     @PostMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<Void> addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
-        userService.addFriend(id, friendId);
+    public ResponseEntity<Void> addFriend(@PathVariable Long id, @PathVariable Long friendId) {  // Changed to Long
+        userService.addFriend(id, friendId);  // Changed to Long
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // Remove a friend from a user
     @DeleteMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<Void> removeFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
-        userService.removeFriend(id, friendId);
+    public ResponseEntity<Void> removeFriend(@PathVariable Long id, @PathVariable Long friendId) {  // Changed to Long
+        userService.removeFriend(id, friendId);  // Changed to Long
         return ResponseEntity.noContent().build();
     }
 
     // Update user role
     @PatchMapping("/{id}/role")
-    public ResponseEntity<User> updateRole(@PathVariable Integer id, @RequestParam String role) {
+    public ResponseEntity<User> updateRole(@PathVariable Long id, @RequestParam String role) {  // Changed to Long
         // Ensure the role is valid, else handle validation error
         User.Role newRole = User.Role.valueOf(role.toUpperCase());
-        User updatedUser = userService.updateRole(id, newRole);
+        User updatedUser = userService.updateRole(id, newRole);  // Changed to Long
         return ResponseEntity.ok(updatedUser);
     }
+
+    // Register a new user
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         try {

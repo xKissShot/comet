@@ -6,11 +6,11 @@ import java.util.List;
 
 public class User {
 
-    private Integer id;
+    private Long id;  // Changed to Long to match BIGINT in database
     private String username;
     private String password;
     private Boolean isDeleted;
-    private LocalDateTime deletedAt;  // Add timestamp for soft deletion
+    private LocalDateTime deletedAt;  // Timestamp for soft deletion
     private Role role;
     private List<User> friends = new ArrayList<>();
 
@@ -24,7 +24,7 @@ public class User {
     public User() {}
 
     // Constructor with all fields
-    public User(Integer id, String username, String password, Boolean isDeleted, LocalDateTime deletedAt, Role role) {
+    public User(Long id, String username, String password, Boolean isDeleted, LocalDateTime deletedAt, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -34,11 +34,11 @@ public class User {
     }
 
     // Getters and setters
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

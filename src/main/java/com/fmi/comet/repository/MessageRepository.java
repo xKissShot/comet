@@ -26,7 +26,8 @@ public class MessageRepository {
             ps.setLong(1, message.getSenderId());
             ps.setLong(2, message.getChannelId());
             ps.setString(3, message.getContent());
-            ps.setTimestamp(4, new java.sql.Timestamp(message.getTimestamp().getTime()));
+            // Using java.sql.Timestamp to set the timestamp
+            ps.setTimestamp(4, message.getTimestamp());
         });
 
         // Return the saved message with an ID set after insert (assumes auto-increment primary key)
@@ -42,6 +43,7 @@ public class MessageRepository {
             message.setSenderId(rs.getLong("sender_id"));
             message.setChannelId(rs.getLong("channel_id"));
             message.setContent(rs.getString("content"));
+            // Retrieve the timestamp from the database
             message.setTimestamp(rs.getTimestamp("timestamp"));
             return message;
         });

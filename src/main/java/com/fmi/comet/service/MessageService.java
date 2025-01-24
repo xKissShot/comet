@@ -5,6 +5,7 @@ import com.fmi.comet.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -20,7 +21,7 @@ public class MessageService {
     public Message sendMessage(Message message) {
         // Set the timestamp if it's not already set
         if (message.getTimestamp() == null) {
-            message.setTimestamp(new java.util.Date()); // Set the current time as timestamp
+            message.setTimestamp(new Timestamp(System.currentTimeMillis())); // Set the current time as timestamp
         }
         // Save the message to the repository
         return messageRepository.save(message);

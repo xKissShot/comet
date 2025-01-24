@@ -1,6 +1,6 @@
 package com.fmi.comet.model;
 
-import java.util.Date;
+import java.sql.Timestamp;  // Import java.sql.Timestamp
 
 public class Message {
 
@@ -8,7 +8,7 @@ public class Message {
     private Long senderId;
     private Long channelId;
     private String content;
-    private Date timestamp; // Ensure this is of type Date or Timestamp
+    private Timestamp timestamp; // Change to java.sql.Timestamp
 
     // Getters and Setters
     public Long getId() {
@@ -43,11 +43,11 @@ public class Message {
         this.content = content;
     }
 
-    public Date getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 }
