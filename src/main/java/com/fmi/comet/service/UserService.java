@@ -12,67 +12,52 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;  // Declare PasswordEncoder
+    private final PasswordEncoder passwordEncoder;
 
-    // Inject UserRepository and PasswordEncoder through constructor
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;  // Initialize PasswordEncoder
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // Get all users
     public List<User> getAllUsers() {
         return userRepository.findAllUsers();
     }
 
-    // Add a new user
     public User addUser(User user) {
-        // Hash the password before inserting
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Insert the user into the database
-        userRepository.insertUser(user);  // Use insertUser() instead of save()
+        userRepository.insertUser(user);
 
-        // Return the user with the updated ID (after insert)
         return userRepository.findUserById(user.getId());
     }
 
-    // Soft delete a user
-    public void softDeleteUser(Long id) {  // Changed to Long
-        userRepository.markUserAsDeleted(id);  // Changed to Long
+    public void softDeleteUser(Long id) {
+        userRepository.markUserAsDeleted(id);
     }
 
-    // Update user role
-    public User updateRole(Long id, User.Role role) {  // Changed to Long
-        userRepository.updateUserRole(id, role);  // Changed to Long
-        return userRepository.findUserById(id);  // Changed to Long
+    public User updateRole(Long id, User.Role role) {
+        userRepository.updateUserRole(id, role);
+        return userRepository.findUserById(id);
     }
 
-    // Add a friend to a user
-    public void addFriend(Long userId, Long friendId) {  // Changed to Long
-        userRepository.addFriend(userId, friendId);  // Changed to Long
+    public void addFriend(Long userId, Long friendId) {
+        userRepository.addFriend(userId, friendId);
     }
 
-    // Remove a friend from a user
-    public void removeFriend(Long userId, Long friendId) {  // Changed to Long
-        userRepository.removeFriend(userId, friendId);  // Changed to Long
+    public void removeFriend(Long userId, Long friendId) {
+        userRepository.removeFriend(userId, friendId);
     }
 
-    // Get all friends for a user
-    public List<User> getFriends(Long userId) {  // Changed to Long
-        return userRepository.findFriends(userId);  // Changed to Long
+    public List<User> getFriends(Long userId) {
+        return userRepository.findFriends(userId);
     }
 
-    // Register a new user (with password encoding)
     public User registerUser(User user) {
-        // Hash the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Insert the new user into the database
         userRepository.insertUser(user);  // Use insertUser() instead of save()
 
-        // Return the user with the updated ID (after insert)
         return userRepository.findUserById(user.getId());  // Changed to Long
     }
 }

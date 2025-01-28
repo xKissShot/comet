@@ -6,7 +6,6 @@ public class Channel {
     private Long ownerId;
     private Boolean isDeleted;
 
-    // Getters and setters
     public Long getId() {
         return id;
     }

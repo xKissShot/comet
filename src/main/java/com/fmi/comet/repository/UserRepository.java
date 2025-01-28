@@ -38,49 +38,41 @@ public class UserRepository {
         }
     };
 
-    // Find all active users
     public List<User> findAllUsers() {
         String sql = "SELECT * FROM users WHERE is_deleted = false";
         return jdbcTemplate.query(sql, USER_ROW_MAPPER);
     }
 
-    // Insert a new user
     public void insertUser(User user) {
         String sql = "INSERT INTO users (username, password, role, is_deleted, deleted_at) VALUES (?, ?, ?, false, null)";
         jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getRole().name());
     }
 
-    // Find a user by ID
     public User findUserById(Long id) {  // Changed to Long
         String sql = "SELECT * FROM users WHERE id = ? AND is_deleted = false";  // Ensure you're retrieving only non-deleted users
         return jdbcTemplate.queryForObject(sql, USER_ROW_MAPPER, id);
     }
 
-    // Mark a user as deleted (soft delete)
     public void markUserAsDeleted(Long id) {  // Changed to Long
         String sql = "UPDATE users SET is_deleted = true, deleted_at = ? WHERE id = ?";
         jdbcTemplate.update(sql, LocalDateTime.now(), id);
     }
 
-    // Update user role
     public void updateUserRole(Long id, User.Role role) {  // Changed to Long
         String sql = "UPDATE users SET role = ? WHERE id = ?";
         jdbcTemplate.update(sql, role.name(), id);
     }
 
-    // Add a friend
     public void addFriend(Long userId, Long friendId) {  // Changed to Long
         String sql = "INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, friendId);
     }
 
-    // Remove a friend
     public void removeFriend(Long userId, Long friendId) {  // Changed to Long
         String sql = "DELETE FROM user_friends WHERE user_id = ? AND friend_id = ?";
         jdbcTemplate.update(sql, userId, friendId);
     }
 
-    // Get all friends for a user
     public List<User> findFriends(Long userId) {  // Changed to Long
         String sql = """
             SELECT u.* FROM users u

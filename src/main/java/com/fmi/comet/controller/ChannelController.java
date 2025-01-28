@@ -20,7 +20,6 @@ public class ChannelController {
         this.channelService = channelService;
     }
 
-    // Create a channel
     @PostMapping
     public ResponseEntity<Channel> createChannel(@RequestBody Channel channel) {
         try {
@@ -31,14 +30,12 @@ public class ChannelController {
         }
     }
 
-    // Get channels by user id
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Channel>> getChannelsByUserId(@PathVariable Long userId) {
         List<Channel> channels = channelService.getChannelsByUserId(userId);
         return ResponseEntity.ok(channels);
     }
 
-    // Delete a channel
     @DeleteMapping("/{channelId}")
     public ResponseEntity<Void> deleteChannel(@PathVariable Long channelId) {
         try {

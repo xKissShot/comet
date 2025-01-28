@@ -18,7 +18,6 @@ public class MessageRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // Create or save a message
     public Message save(Message message) {
         String sql = "INSERT INTO messages (sender_id, channel_id, content, timestamp) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, message.getSenderId(), message.getChannelId(), message.getContent(), message.getTimestamp());
@@ -31,7 +30,6 @@ public class MessageRepository {
         return message;
     }
 
-    // Get messages by channel id
     public List<Message> findByChannelId(Long channelId) {
         String sql = "SELECT * FROM messages WHERE channel_id = ?";
         return jdbcTemplate.query(sql, new Object[]{channelId}, (rs, rowNum) -> {
@@ -45,7 +43,6 @@ public class MessageRepository {
         });
     }
 
-    // Get messages by user (sender) id
     public List<Message> findByUserId(Long userId) {
         String sql = "SELECT * FROM messages WHERE sender_id = ?";
         return jdbcTemplate.query(sql, new Object[]{userId}, (rs, rowNum) -> {

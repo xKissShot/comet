@@ -20,10 +20,8 @@ public class User {
         GUEST
     }
 
-    // Default constructor
     public User() {}
 
-    // Constructor with all fields
     public User(Long id, String username, String password, Boolean isDeleted, LocalDateTime deletedAt, Role role) {
         this.id = id;
         this.username = username;
@@ -33,7 +31,6 @@ public class User {
         this.role = role;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }

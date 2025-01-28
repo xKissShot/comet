@@ -20,7 +20,6 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-    // Send a message to a channel
     @PostMapping
     public ResponseEntity<Message> sendMessage(@RequestBody Message message) {
         try {
@@ -31,14 +30,12 @@ public class MessageController {
         }
     }
 
-    // Get all messages for a channel
     @GetMapping("/channel/{channelId}")
     public ResponseEntity<List<Message>> getMessagesByChannelId(@PathVariable Long channelId) {
         List<Message> messages = messageService.getMessagesByChannelId(channelId);
         return ResponseEntity.ok(messages);
     }
 
-    // Get all messages for a user
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Message>> getMessagesByUserId(@PathVariable Long userId) {
         List<Message> messages = messageService.getMessagesByUserId(userId);

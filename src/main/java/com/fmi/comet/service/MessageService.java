@@ -19,11 +19,9 @@ public class MessageService {
     }
 
     public Message sendMessage(Message message) {
-        // Set the timestamp if it's not already set
         if (message.getTimestamp() == null) {
-            message.setTimestamp(new Timestamp(System.currentTimeMillis())); // Set the current time as timestamp
+            message.setTimestamp(new Timestamp(System.currentTimeMillis()));
         }
-        // Save the message to the repository
         return messageRepository.save(message);
     }
 
@@ -31,7 +29,6 @@ public class MessageService {
         return messageRepository.findByChannelId(channelId);
     }
 
-    // Add a method to retrieve messages for a specific user
     public List<Message> getMessagesByUserId(Long userId) {
         return messageRepository.findByUserId(userId); // Call the repository method to fetch messages by sender_id
     }

@@ -10,7 +10,6 @@ public class Message {
     private String content;
     private Timestamp timestamp; // Change to java.sql.Timestamp
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

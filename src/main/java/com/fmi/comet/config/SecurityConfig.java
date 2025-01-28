@@ -18,12 +18,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        // Secure API endpoints; require authentication for these
                         .requestMatchers("/api/messages/**", "/api/channels/**").hasRole("USER")
-                        .anyRequest().permitAll() // Allow all other requests (e.g., home page)
+                        .anyRequest().permitAll()
                 )
-                .httpBasic(withDefaults()) // Enable HTTP Basic Authentication
-                .csrf(csrf -> csrf.disable()); // Disable CSRF for simplicity (not recommended for production)
+                .httpBasic(withDefaults())
+                .csrf(csrf -> csrf.disable());
 
         return http.build();
     }
