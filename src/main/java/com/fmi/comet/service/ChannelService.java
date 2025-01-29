@@ -26,6 +26,18 @@ public class ChannelService {
     }
 
     public void deleteChannel(Long channelId) {
-        channelRepository.delete(channelId);
+        channelRepository.deleteById(channelId);
+    }
+
+    public boolean isUserChannelOwner(Long channelId, Long userId) {
+        return channelRepository.isOwner(channelId, userId);
+    }
+
+    public boolean isUserAdminOrOwner(Long channelId, Long userId) {
+        return channelRepository.isAdminOrOwner(channelId, userId);
+    }
+
+    public void removeUserFromChannel(Long channelId, Long userId) {
+        channelRepository.removeUserFromChannel(channelId, userId);
     }
 }

@@ -6,6 +6,7 @@ public class Channel {
     private Long ownerId;
     private Boolean isDeleted;
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -30,11 +31,17 @@ public class Channel {
         this.ownerId = ownerId;
     }
 
+    // Rename this method to getIsDeleted()
     public Boolean getIsDeleted() {
         return isDeleted;
     }
 
     public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    @Override
+    public String toString() {
+        return "Channel{id=" + id + ", name='" + name + "', ownerId=" + ownerId + ", isDeleted=" + isDeleted + "}";
     }
 }

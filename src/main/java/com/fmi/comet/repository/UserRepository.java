@@ -2,6 +2,7 @@ package com.fmi.comet.repository;
 
 import com.fmi.comet.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepository {
@@ -21,12 +23,11 @@ public class UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // RowMapper for User
     private static final RowMapper<User> USER_ROW_MAPPER = new RowMapper<>() {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             User user = new User();
-            user.setId(rs.getLong("id"));  // Changed to Long
+            user.setId(rs.getLong("id"));
             user.setUsername(rs.getString("username"));
             user.setPassword(rs.getString("password"));
             user.setRole(User.Role.valueOf(rs.getString("role")));
@@ -39,45 +40,86 @@ public class UserRepository {
     };
 
     public List<User> findAllUsers() {
-        String sql = "SELECT * FROM users WHERE is_deleted = false";
+        String sql = "SELECT * FROM users WHERE is_deleted = 0";
         return jdbcTemplate.query(sql, USER_ROW_MAPPER);
     }
 
     public void insertUser(User user) {
-        String sql = "INSERT INTO users (username, password, role, is_deleted, deleted_at) VALUES (?, ?, ?, false, null)";
+        if (user.getRole() == null) {
+            user.setRole(User.Role.USER); // Default to USER if role is null
+        }
+
+        String sql = "INSERT INTO users (username, password, role, is_deleted, deleted_at) VALUES (?, ?, ?, 0, null)";
         jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getRole().name());
+
+        // Log for debugging purposes
+        System.out.println("User inserted: " + user);
+
+        // Fetch the ID of the newly inserted user using SCOPE_IDENTITY() for SQL Server
+        String getLastIdSql = "SELECT SCOPE_IDENTITY()";
+        Long id = jdbcTemplate.queryForObject(getLastIdSql, Long.class);
+
+        if (id == null) {
+            throw new RuntimeException("User ID could not be retrieved after insertion");
+        }
+
+        user.setId(id);  // Set the generated ID on the user
+
+        // Log the inserted user ID
+        System.out.println("User ID retrieved: " + user.getId());
     }
 
-    public User findUserById(Long id) {  // Changed to Long
-        String sql = "SELECT * FROM users WHERE id = ? AND is_deleted = false";  // Ensure you're retrieving only non-deleted users
-        return jdbcTemplate.queryForObject(sql, USER_ROW_MAPPER, id);
+    public Optional<User> findUserById(Long id) {
+        String sql = "SELECT * FROM users WHERE id = ? AND is_deleted = 0";
+        try {
+            // Use queryForObject and return Optional
+            User user = jdbcTemplate.queryForObject(sql, USER_ROW_MAPPER, id);
+            return Optional.of(user);  // Wrap the result in Optional
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();  // Return an empty Optional if no user is found
+        }
     }
 
-    public void markUserAsDeleted(Long id) {  // Changed to Long
-        String sql = "UPDATE users SET is_deleted = true, deleted_at = ? WHERE id = ?";
+    public Optional<User> findUserByUsername(String username) {
+        String sql = "SELECT * FROM users WHERE username = ? AND is_deleted = 0";
+        try {
+            User user = jdbcTemplate.queryForObject(sql, USER_ROW_MAPPER, username);
+            return Optional.of(user);  // Wrap the result in Optional
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();  // Return an empty Optional if no user is found
+        }
+    }
+
+    public void markUserAsDeleted(Long id) {
+        String sql = "UPDATE users SET is_deleted = 1, deleted_at = ? WHERE id = ?";
         jdbcTemplate.update(sql, LocalDateTime.now(), id);
     }
 
-    public void updateUserRole(Long id, User.Role role) {  // Changed to Long
+    public void restoreUser(Long id) {
+        String sql = "UPDATE users SET is_deleted = 0, deleted_at = NULL WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    public void updateUserRole(Long id, User.Role role) {
         String sql = "UPDATE users SET role = ? WHERE id = ?";
         jdbcTemplate.update(sql, role.name(), id);
     }
 
-    public void addFriend(Long userId, Long friendId) {  // Changed to Long
+    public void addFriend(Long userId, Long friendId) {
         String sql = "INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, friendId);
     }
 
-    public void removeFriend(Long userId, Long friendId) {  // Changed to Long
+    public void removeFriend(Long userId, Long friendId) {
         String sql = "DELETE FROM user_friends WHERE user_id = ? AND friend_id = ?";
         jdbcTemplate.update(sql, userId, friendId);
     }
 
-    public List<User> findFriends(Long userId) {  // Changed to Long
+    public List<User> findFriends(Long userId) {
         String sql = """
             SELECT u.* FROM users u
             INNER JOIN user_friends uf ON u.id = uf.friend_id
-            WHERE uf.user_id = ? AND u.is_deleted = false
+            WHERE uf.user_id = ? AND u.is_deleted = 0
         """;
         return jdbcTemplate.query(sql, USER_ROW_MAPPER, userId);
     }

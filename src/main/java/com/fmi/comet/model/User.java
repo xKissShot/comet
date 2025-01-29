@@ -6,29 +6,37 @@ import java.util.List;
 
 public class User {
 
-    private Long id;  // Changed to Long to match BIGINT in database
+    private Long id;
     private String username;
     private String password;
     private Boolean isDeleted;
-    private LocalDateTime deletedAt;  // Timestamp for soft deletion
+    private LocalDateTime deletedAt;
     private Role role;
     private List<User> friends = new ArrayList<>();
 
     public enum Role {
         ADMIN,
         OWNER,
-        GUEST
+        GUEST,
+        USER
     }
 
-    public User() {}
+    public User() {
+        this.role = Role.USER;  // Default role to USER
+    }
 
-    public User(Long id, String username, String password, Boolean isDeleted, LocalDateTime deletedAt, Role role) {
+    public User(Long id, String username, String password, Boolean isDeleted, LocalDateTime deletedAt, Role role, List<User> friends) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.isDeleted = isDeleted;
         this.deletedAt = deletedAt;
-        this.role = role;
+        this.role = (role != null) ? role : Role.USER; // Default to USER if role is null
+        this.friends = friends;
+    }
+
+    public User(Long id, String username, String password, Boolean isDeleted, LocalDateTime deletedAt, Role role) {
+        this(id, username, password, isDeleted, deletedAt, (role != null) ? role : Role.USER, new ArrayList<>());
     }
 
     public Long getId() {
@@ -76,7 +84,7 @@ public class User {
     }
 
     public void setRole(Role role) {
-        this.role = role;
+        this.role = (role != null) ? role : Role.USER;  // Default to USER if role is null
     }
 
     public List<User> getFriends() {
@@ -96,6 +104,7 @@ public class User {
                 ", isDeleted=" + isDeleted +
                 ", deletedAt=" + deletedAt +
                 ", role=" + role +
+                ", friends=" + friends +
                 '}';
     }
 }

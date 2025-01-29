@@ -20,62 +20,52 @@ public class UserController {
         this.userService = userService;
     }
 
+    // Get all users that are not deleted
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
+    // Create a new user
     @PostMapping
     public ResponseEntity<User> addUser(@RequestBody User user) {
-        User createdUser = userService.addUser(user);  // Ensure this returns the created user with an ID
+        User createdUser = userService.addUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
+    // Soft delete user by marking as deleted
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDeleteUser(@PathVariable Long id) {  // Changed to Long
-        userService.softDeleteUser(id);  // Changed to Long
+    public ResponseEntity<Void> softDeleteUser(@PathVariable Long id) {
+        userService.softDeleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
+    // Get all friends of a user
     @GetMapping("/{id}/friends")
-    public ResponseEntity<List<User>> getFriends(@PathVariable Long id) {  // Changed to Long
-        List<User> friends = userService.getFriends(id);  // Changed to Long
+    public ResponseEntity<List<User>> getFriends(@PathVariable Long id) {
+        List<User> friends = userService.getFriends(id);
         return ResponseEntity.ok(friends);
     }
 
+    // Add a friend for the user
     @PostMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<Void> addFriend(@PathVariable Long id, @PathVariable Long friendId) {  // Changed to Long
-        userService.addFriend(id, friendId);  // Changed to Long
+    public ResponseEntity<Void> addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        userService.addFriend(id, friendId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    // Remove a friend from the user
     @DeleteMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<Void> removeFriend(@PathVariable Long id, @PathVariable Long friendId) {  // Changed to Long
-        userService.removeFriend(id, friendId);  // Changed to Long
+    public ResponseEntity<Void> removeFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        userService.removeFriend(id, friendId);
         return ResponseEntity.noContent().build();
     }
 
+    // Update the role of a user
     @PatchMapping("/{id}/role")
-    public ResponseEntity<User> updateRole(@PathVariable Long id, @RequestParam String role) {  // Changed to Long
-        User.Role newRole = User.Role.valueOf(role.toUpperCase());
-        User updatedUser = userService.updateRole(id, newRole);  // Changed to Long
+    public ResponseEntity<User> updateRole(@PathVariable Long id, @RequestBody User.Role role) {
+        User updatedUser = userService.updateRole(id, role);
         return ResponseEntity.ok(updatedUser);
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
-        try {
-            if (user.getUsername() == null || user.getPassword() == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Username and password must be provided.");
-            }
-
-            User createdUser = userService.registerUser(user);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
-        }
     }
 }

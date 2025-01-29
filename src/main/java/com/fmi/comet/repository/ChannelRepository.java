@@ -1,11 +1,11 @@
 package com.fmi.comet.repository;
 
 import com.fmi.comet.model.Channel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -18,31 +18,49 @@ public class ChannelRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private static final RowMapper<Channel> CHANNEL_ROW_MAPPER = (rs, rowNum) -> {
+        Channel channel = new Channel();
+        channel.setId(rs.getLong("id"));
+        channel.setName(rs.getString("name"));
+        channel.setOwnerId(rs.getLong("owner_id"));
+        channel.setIsDeleted(rs.getBoolean("is_deleted"));
+        return channel;
+    };
+
     public Channel save(Channel channel) {
-        String sql = "INSERT INTO channels (name, owner_id, is_deleted) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO channels (name, owner_id, is_deleted, created_at, updated_at) VALUES (?, ?, ?, GETDATE(), GETDATE())";
         jdbcTemplate.update(sql, channel.getName(), channel.getOwnerId(), channel.getIsDeleted());
-
-        String getIdSql = "SELECT id FROM channels WHERE name = ? AND owner_id = ? LIMIT 1";
-        Long id = jdbcTemplate.queryForObject(getIdSql, Long.class, channel.getName(), channel.getOwnerId());
+        Long id = jdbcTemplate.queryForObject("SELECT SCOPE_IDENTITY()", Long.class);
         channel.setId(id);
-
         return channel;
     }
 
     public List<Channel> findByUserId(Long userId) {
-        String sql = "SELECT * FROM channels WHERE owner_id = ? AND is_deleted = false";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Channel channel = new Channel();
-            channel.setId(rs.getLong("id"));
-            channel.setName(rs.getString("name"));
-            channel.setOwnerId(rs.getLong("owner_id"));
-            channel.setIsDeleted(rs.getBoolean("is_deleted"));
-            return channel;
-        }, userId);
+        String sql = "SELECT * FROM channels WHERE owner_id = ? AND is_deleted = 0";
+        return jdbcTemplate.query(sql, CHANNEL_ROW_MAPPER, userId);
     }
 
-    public void delete(Long channelId) {
-        String sql = "UPDATE channels SET is_deleted = true WHERE id = ?";
+    public void deleteById(Long channelId) {
+        String sql = "UPDATE channels SET is_deleted = 1, updated_at = GETDATE() WHERE id = ?";
         jdbcTemplate.update(sql, channelId);
+    }
+
+    public boolean isOwner(Long channelId, Long userId) {
+        String sql = "SELECT COUNT(*) FROM channels WHERE id = ? AND owner_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, channelId, userId);
+        return count != null && count > 0;
+    }
+
+    public boolean isAdminOrOwner(Long channelId, Long userId) {
+        String sql = """
+            SELECT COUNT(*) FROM channel_members WHERE channel_id = ? AND user_id = ? AND (role = 'ADMIN' OR role = 'OWNER')
+        """;
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, channelId, userId);
+        return count != null && count > 0;
+    }
+
+    public void removeUserFromChannel(Long channelId, Long userId) {
+        String sql = "DELETE FROM channel_members WHERE channel_id = ? AND user_id = ?";
+        jdbcTemplate.update(sql, channelId, userId);
     }
 }

@@ -25,11 +25,18 @@ public class UserService {
     }
 
     public User addUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getRole() == null) {
+            user.setRole(User.Role.USER); // Default to USER if no role is provided
+        }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));  // Encrypt password
+
+        // Insert user and ensure they are properly registered
         userRepository.insertUser(user);
 
-        return userRepository.findUserById(user.getId());
+        // Check if the user was inserted and ID was generated
+        return userRepository.findUserById(user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found after insertion"));
     }
 
     public void softDeleteUser(Long id) {
@@ -38,7 +45,8 @@ public class UserService {
 
     public User updateRole(Long id, User.Role role) {
         userRepository.updateUserRole(id, role);
-        return userRepository.findUserById(id);
+        return userRepository.findUserById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     public void addFriend(Long userId, Long friendId) {
@@ -54,10 +62,16 @@ public class UserService {
     }
 
     public User registerUser(User user) {
+        if (user.getRole() == null) {
+            user.setRole(User.Role.USER);  // Default role to USER
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        userRepository.insertUser(user);  // Use insertUser() instead of save()
+        // Insert user and ensure they are properly registered
+        userRepository.insertUser(user);
 
-        return userRepository.findUserById(user.getId());  // Changed to Long
+        return userRepository.findUserById(user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found after registration"));
     }
 }
