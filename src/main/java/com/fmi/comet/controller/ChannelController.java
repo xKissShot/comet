@@ -80,4 +80,36 @@ public class ChannelController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while removing the user");
         }
     }
+
+    @PostMapping("/{channelId}/add-user")
+    public ResponseEntity<String> addUserToChannel(@PathVariable Long channelId,
+                                                   @RequestParam Long userId,
+                                                   @RequestParam String role) {
+        try {
+            if (channelService.isUserAdminOrOwner(channelId, userId)) {
+                channelService.addUserToChannel(channelId, userId, role);
+                return ResponseEntity.status(HttpStatus.CREATED).body("User added to channel");
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admins or owners can add users");
+            }
+        } catch (Exception e) {
+            logger.error("Error adding user to channel with channelId {}: ", channelId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while adding the user");
+        }
+    }
+
+    @DeleteMapping("/{channelId}/members/{userId}")
+    public ResponseEntity<Void> removeGuestFromChannel(@PathVariable Long channelId, @PathVariable Long userId, @RequestParam Long requesterId) {
+        if (!channelService.isUserAdminOrOwner(channelId, requesterId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        String guestRole = "GUEST";
+        if (!channelService.isUserInRole(channelId, userId, guestRole)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        channelService.removeUserFromChannel(channelId, userId);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -40,4 +40,14 @@ public class ChannelService {
     public void removeUserFromChannel(Long channelId, Long userId) {
         channelRepository.removeUserFromChannel(channelId, userId);
     }
+
+    public void addUserToChannel(Long channelId, Long userId, String role) {
+        channelRepository.addUserToChannel(channelId, userId, role);
+    }
+
+    public boolean isUserInRole(Long channelId, Long userId, String role) {
+        return channelRepository.isUserInRole(channelId, userId, role);
+    }
+
 }
+

@@ -20,6 +20,19 @@ public class MessageController {
         this.messageService = messageService;
     }
 
+    @PostMapping("/users/{userId}/friends/{friendId}/message")
+    public ResponseEntity<Message> sendMessageToFriend(
+            @PathVariable Long userId,
+            @PathVariable Long friendId,
+            @RequestBody Message message) {
+        try {
+            Message sentMessage = messageService.sendMessageToFriend(userId, friendId, message);
+            return ResponseEntity.status(HttpStatus.CREATED).body(sentMessage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Message> sendMessage(@RequestBody Message message) {
         try {

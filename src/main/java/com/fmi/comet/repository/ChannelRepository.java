@@ -28,10 +28,17 @@ public class ChannelRepository {
     };
 
     public Channel save(Channel channel) {
-        String sql = "INSERT INTO channels (name, owner_id, is_deleted, created_at, updated_at) VALUES (?, ?, ?, GETDATE(), GETDATE())";
+        if (channel.getIsDeleted() == null) {
+            channel.setIsDeleted(false);
+        }
+
+        String sql = "INSERT INTO channels (name, owner_id, is_deleted) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, channel.getName(), channel.getOwnerId(), channel.getIsDeleted());
-        Long id = jdbcTemplate.queryForObject("SELECT SCOPE_IDENTITY()", Long.class);
+
+        Long id = jdbcTemplate.queryForObject("SELECT IDENT_CURRENT('channels')", Long.class);
+
         channel.setId(id);
+
         return channel;
     }
 
@@ -41,7 +48,7 @@ public class ChannelRepository {
     }
 
     public void deleteById(Long channelId) {
-        String sql = "UPDATE channels SET is_deleted = 1, updated_at = GETDATE() WHERE id = ?";
+        String sql = "UPDATE channels SET is_deleted = 1 WHERE id = ?";
         jdbcTemplate.update(sql, channelId);
     }
 
@@ -63,4 +70,18 @@ public class ChannelRepository {
         String sql = "DELETE FROM channel_members WHERE channel_id = ? AND user_id = ?";
         jdbcTemplate.update(sql, channelId, userId);
     }
+
+    // New method to add user to channel with a specific role
+    public void addUserToChannel(Long channelId, Long userId, String role) {
+        String sql = "INSERT INTO channel_members (channel_id, user_id, role) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, channelId, userId, role);
+    }
+
+    public boolean isUserInRole(Long channelId, Long userId, String role) {
+        String sql = "SELECT COUNT(*) FROM channel_members WHERE channel_id = ? AND user_id = ? AND role = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, channelId, userId, role);
+        return count != null && count > 0;
+    }
+
 }
+

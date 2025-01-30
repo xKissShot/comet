@@ -122,4 +122,14 @@ public class UserRepository {
         """;
         return jdbcTemplate.query(sql, USER_ROW_MAPPER, userId);
     }
+
+    public boolean isFriend(Long userId, Long friendId) {
+        String sql = """
+        SELECT COUNT(*) FROM user_friends
+        WHERE (user_id = ? AND friend_id = ?) OR (user_id = ? AND friend_id = ?)
+    """;
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, userId, friendId, friendId, userId);
+        return count > 0;
+    }
+
 }

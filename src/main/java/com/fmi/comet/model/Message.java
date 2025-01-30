@@ -6,9 +6,11 @@ public class Message {
 
     private Long id;
     private Long senderId;
+    private Long receiverId;
     private Long channelId;
     private String content;
-    private Timestamp timestamp; // Change to java.sql.Timestamp
+    private Timestamp timestamp;
+    private MessageType messageType;
 
     public Long getId() {
         return id;
@@ -24,6 +26,14 @@ public class Message {
 
     public void setSenderId(Long senderId) {
         this.senderId = senderId;
+    }
+
+    public Long getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(Long receiverId) {
+        this.receiverId = receiverId;
     }
 
     public Long getChannelId() {
@@ -48,5 +58,13 @@ public class Message {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(MessageType messageType) {
+        this.messageType = messageType;
     }
 }
