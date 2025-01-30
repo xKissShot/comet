@@ -6,7 +6,6 @@ public class Channel {
     private Long ownerId;
     private Boolean isDeleted;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -31,7 +30,6 @@ public class Channel {
         this.ownerId = ownerId;
     }
 
-    // Rename this method to getIsDeleted()
     public Boolean getIsDeleted() {
         return isDeleted;
     }

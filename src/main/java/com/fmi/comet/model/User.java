@@ -22,7 +22,7 @@ public class User {
     }
 
     public User() {
-        this.role = Role.USER;  // Default role to USER
+        this.role = Role.USER;
     }
 
     public User(Long id, String username, String password, Boolean isDeleted, LocalDateTime deletedAt, Role role, List<User> friends) {

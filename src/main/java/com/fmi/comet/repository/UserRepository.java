@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,39 +45,32 @@ public class UserRepository {
         return jdbcTemplate.query(sql, USER_ROW_MAPPER);
     }
 
+    @Transactional
     public void insertUser(User user) {
         if (user.getRole() == null) {
-            user.setRole(User.Role.USER); // Default to USER if role is null
+            user.setRole(User.Role.USER);
         }
 
-        String sql = "INSERT INTO users (username, password, role, is_deleted, deleted_at) VALUES (?, ?, ?, 0, null)";
-        jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getRole().name());
+        String sql = "INSERT INTO users (username, password, role, is_deleted, deleted_at) OUTPUT INSERTED.id VALUES (?, ?, ?, 0, NULL)";
 
-        // Log for debugging purposes
-        System.out.println("User inserted: " + user);
-
-        // Fetch the ID of the newly inserted user using SCOPE_IDENTITY() for SQL Server
-        String getLastIdSql = "SELECT SCOPE_IDENTITY()";
-        Long id = jdbcTemplate.queryForObject(getLastIdSql, Long.class);
+        Long id = jdbcTemplate.queryForObject(sql, Long.class, user.getUsername(), user.getPassword(), user.getRole().name());
 
         if (id == null) {
             throw new RuntimeException("User ID could not be retrieved after insertion");
         }
 
-        user.setId(id);  // Set the generated ID on the user
+        user.setId(id);
 
-        // Log the inserted user ID
-        System.out.println("User ID retrieved: " + user.getId());
+        System.out.println("User inserted with ID: " + user.getId());
     }
 
     public Optional<User> findUserById(Long id) {
         String sql = "SELECT * FROM users WHERE id = ? AND is_deleted = 0";
         try {
-            // Use queryForObject and return Optional
             User user = jdbcTemplate.queryForObject(sql, USER_ROW_MAPPER, id);
-            return Optional.of(user);  // Wrap the result in Optional
+            return Optional.of(user);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();  // Return an empty Optional if no user is found
+            return Optional.empty();
         }
     }
 
@@ -84,35 +78,40 @@ public class UserRepository {
         String sql = "SELECT * FROM users WHERE username = ? AND is_deleted = 0";
         try {
             User user = jdbcTemplate.queryForObject(sql, USER_ROW_MAPPER, username);
-            return Optional.of(user);  // Wrap the result in Optional
+            return Optional.of(user);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();  // Return an empty Optional if no user is found
+            return Optional.empty();
         }
     }
 
     public void markUserAsDeleted(Long id) {
         String sql = "UPDATE users SET is_deleted = 1, deleted_at = ? WHERE id = ?";
         jdbcTemplate.update(sql, LocalDateTime.now(), id);
+        System.out.println("User marked as deleted: " + id); // Log deletion
     }
 
     public void restoreUser(Long id) {
         String sql = "UPDATE users SET is_deleted = 0, deleted_at = NULL WHERE id = ?";
         jdbcTemplate.update(sql, id);
+        System.out.println("User restored: " + id); // Log restoration
     }
 
     public void updateUserRole(Long id, User.Role role) {
         String sql = "UPDATE users SET role = ? WHERE id = ?";
         jdbcTemplate.update(sql, role.name(), id);
+        System.out.println("User role updated: " + id + " to " + role); // Log role update
     }
 
     public void addFriend(Long userId, Long friendId) {
         String sql = "INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, friendId);
+        System.out.println("Friend added: " + userId + " and " + friendId); // Log adding friend
     }
 
     public void removeFriend(Long userId, Long friendId) {
         String sql = "DELETE FROM user_friends WHERE user_id = ? AND friend_id = ?";
         jdbcTemplate.update(sql, userId, friendId);
+        System.out.println("Friend removed: " + userId + " and " + friendId); // Log removing friend
     }
 
     public List<User> findFriends(Long userId) {

@@ -5,7 +5,6 @@ import com.fmi.comet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -26,15 +25,13 @@ public class UserService {
 
     public User addUser(User user) {
         if (user.getRole() == null) {
-            user.setRole(User.Role.USER); // Default to USER if no role is provided
+            user.setRole(User.Role.USER);
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));  // Encrypt password
 
-        // Insert user and ensure they are properly registered
         userRepository.insertUser(user);
 
-        // Check if the user was inserted and ID was generated
         return userRepository.findUserById(user.getId())
                 .orElseThrow(() -> new RuntimeException("User not found after insertion"));
     }
@@ -63,12 +60,11 @@ public class UserService {
 
     public User registerUser(User user) {
         if (user.getRole() == null) {
-            user.setRole(User.Role.USER);  // Default role to USER
+            user.setRole(User.Role.USER);
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Insert user and ensure they are properly registered
         userRepository.insertUser(user);
 
         return userRepository.findUserById(user.getId())

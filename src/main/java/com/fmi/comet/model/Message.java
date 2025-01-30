@@ -1,6 +1,6 @@
 package com.fmi.comet.model;
 
-import java.sql.Timestamp;  // Import java.sql.Timestamp
+import java.sql.Timestamp;
 
 public class Message {
 
