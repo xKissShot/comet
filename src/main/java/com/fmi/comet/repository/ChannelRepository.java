@@ -71,7 +71,6 @@ public class ChannelRepository {
         jdbcTemplate.update(sql, channelId, userId);
     }
 
-    // New method to add user to channel with a specific role
     public void addUserToChannel(Long channelId, Long userId, String role) {
         String sql = "INSERT INTO channel_members (channel_id, user_id, role) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, channelId, userId, role);

@@ -41,7 +41,11 @@ public class ChannelService {
         channelRepository.removeUserFromChannel(channelId, userId);
     }
 
-    public void addUserToChannel(Long channelId, Long userId, String role) {
+    public void addUserToChannel(Long channelId, Long requesterId, Long userId, String role) {
+        if (!isUserAdminOrOwner(channelId, requesterId)) {
+            throw new IllegalArgumentException("Only admins or owners can add users to a channel.");
+        }
+
         channelRepository.addUserToChannel(channelId, userId, role);
     }
 

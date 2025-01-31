@@ -82,21 +82,23 @@ public class ChannelController {
     }
 
     @PostMapping("/{channelId}/add-user")
-    public ResponseEntity<String> addUserToChannel(@PathVariable Long channelId,
-                                                   @RequestParam Long userId,
-                                                   @RequestParam String role) {
+    public ResponseEntity<String> addUserToChannel(
+            @PathVariable Long channelId,
+            @RequestParam Long requesterId,  // User making the request
+            @RequestParam Long userId,  // User being added
+            @RequestParam String role) {
+
         try {
-            if (channelService.isUserAdminOrOwner(channelId, userId)) {
-                channelService.addUserToChannel(channelId, userId, role);
-                return ResponseEntity.status(HttpStatus.CREATED).body("User added to channel");
-            } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admins or owners can add users");
-            }
+            channelService.addUserToChannel(channelId, requesterId, userId, role);
+            return ResponseEntity.status(HttpStatus.CREATED).body("User added to channel");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         } catch (Exception e) {
             logger.error("Error adding user to channel with channelId {}: ", channelId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while adding the user");
         }
     }
+
 
     @DeleteMapping("/{channelId}/members/{userId}")
     public ResponseEntity<Void> removeGuestFromChannel(@PathVariable Long channelId, @PathVariable Long userId, @RequestParam Long requesterId) {
